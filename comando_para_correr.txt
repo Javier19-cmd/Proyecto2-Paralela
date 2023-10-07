@@ -1,0 +1,5 @@
+Primer comando útil:
+mpicc -o bruteforce bruteforce.c -I/path/to/openssl/include -lcrypto
+
+Para correr el còdigo se usa este comando:
+mpirun -np 4 ./bruteforce
