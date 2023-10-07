@@ -19,6 +19,24 @@ void decrypt(long key, unsigned char *ciph, int len){
   DES_ncbc_encrypt(ciph, ciph, len, &keysched, &iv, DES_DECRYPT);
 }
 
+// Función para encriptar el mensaje con la clave key.
+void encrypt(long key, unsigned char *ciph, int len){
+  DES_key_schedule keysched;
+  DES_cblock iv;
+
+  // Configurar la clave DES
+  DES_set_key_unchecked((const_DES_cblock *)&key, &keysched);
+
+  // Configurar el vector de inicialización
+  memset(iv, 0, sizeof(DES_cblock));
+
+  // Cifrar el mensaje
+  DES_ncbc_encrypt(ciph, ciph, len, &keysched, &iv, DES_ENCRYPT);
+}
+
+
+// Funciòn para buscar la cadena " target " en el mensaje descifrado
+
 char search[] = " 0x74 0x61 0x72 0x64 0x65 ";
 int tryKey(long key, unsigned char *ciph, int len){
   unsigned char temp[len];
