@@ -7,20 +7,19 @@
 
 void decrypt(long key, unsigned char *ciph, int len){
   DES_key_schedule keysched;
-  DES_key_schedule ivsched;
+  DES_cblock iv;
 
   // Configurar la clave DES
-  DES_set_key_checked((const_DES_cblock *)&key, &keysched);
+  DES_set_key_unchecked((const_DES_cblock *)&key, &keysched);
 
   // Configurar el vector de inicialización
-  memset(&ivsched, 0, sizeof(DES_key_schedule));
-  DES_set_key_unchecked((const_DES_cblock *)&ivsched, &ivsched);
+  memset(iv, 0, sizeof(DES_cblock));
 
   // Decifrar el mensaje
-  DES_ncbc_encrypt(ciph, ciph, len, &keysched, &ivsched, DES_DECRYPT);
+  DES_ncbc_encrypt(ciph, ciph, len, &keysched, &iv, DES_DECRYPT);
 }
 
-char search[] = " the ";
+char search[] = " 0x74 0x61 0x72 0x64 0x65 ";
 int tryKey(long key, unsigned char *ciph, int len){
   unsigned char temp[len];
   memcpy(temp, ciph, len);
@@ -28,9 +27,14 @@ int tryKey(long key, unsigned char *ciph, int len){
   return strstr((char *)temp, search) != NULL;
 }
 
+
 // Hello World!
-unsigned char cipher[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x2C, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x21};
+unsigned char cipher[] = {0x46, 0x75, 0x65, 0x20, 0x75, 0x6E, 0x61, 0x20, 0x74, 0x61, 0x72, 0x64, 0x65, 0x20, 0x68, 0x65, 0x72, 0x6D, 0x6F, 0x73, 0x61, 0x20, 0x65, 0x6E, 0x20, 0x65, 0x6C, 0x20, 0x70, 0x61, 0x72, 0x71, 0x75, 0x65, 0x2E};
+  
 int main(int argc, char *argv[]){
+
+
+
   int N, id;
   long upper = (1L << 56); // Upper bound DES keys 2^56
   long mylower, myupper;
