@@ -2,10 +2,12 @@ Primer comando útil:
 mpicc -o bruteforce bruteforce.c -I/path/to/openssl/include -lcrypto
 mpicc -o bruteforce00 bruteforce00.c -I/path/to/openssl/include -lcrypto
 mpicc -o bruteforce00 bruteforce00B.c -I/path/to/openssl/include -lcrypto
-mpicc -o bruteforce00 bruteforce00B2.c -I/path/to/openssl/include -lcrypto
+mpicc -o bruteforce00B2 bruteforce00B2.c -I/path/to/openssl/include -lcrypto
+mpicc -o bruteforce00B3 bruteforce00B3.c -I/path/to/openssl/include -lcrypto
 
 Para correr el còdigo se usa este comando:
 mpirun -np 4 ./bruteforce
-mpirun -np 4 ./bruteforce00
+mpirun -np 4 ./bruteforce00 texto.txt 123456L
 mpirun -np 4 ./bruteforce00B texto.txt 123456L
 mpirun -np 4 ./bruteforce00B2 texto.txt 123456L
+mpirun -np 4 ./bruteforce00B3 texto.txt 123456L
