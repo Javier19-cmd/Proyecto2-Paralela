@@ -27,6 +27,8 @@ void decrypt(long key, char *text, int len) {
 
 int main(int argc, char *argv[]) {
     int N, id;
+    double start_time, end_time; // Variables para medir el tiempo de ejecución
+
     MPI_Init(NULL, NULL);
     MPI_Comm comm = MPI_COMM_WORLD;
     MPI_Comm_size(comm, &N);
@@ -47,6 +49,10 @@ int main(int argc, char *argv[]) {
     // Use the command line arguments for filename and encryption_key
     strcpy(filename, argv[1]);
     encryption_key = atol(argv[2]);
+
+    if (id == 0) {
+        start_time = MPI_Wtime(); // Registro del tiempo de inicio
+    }
 
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -70,6 +76,16 @@ int main(int argc, char *argv[]) {
     if (id == 0) {
         // Print the decrypted text
         printf("Decrypted text: %s\n", text);
+
+        // Search for the keyword "es una prueba de" in the decrypted text
+        if (strstr(text, "es una prueba de") != NULL) {
+            printf("¡Frase o palabra encontrada!\n");
+        } else {
+            printf("Frase o palabra no encontrada en el texto\n");
+        }
+
+        end_time = MPI_Wtime(); // Registro del tiempo de finalización
+        printf("Tiempo de ejecución: %f segundos\n", end_time - start_time);
     }
 
     MPI_Finalize();
