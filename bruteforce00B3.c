@@ -51,9 +51,7 @@ int main(int argc, char *argv[]) {
     strcpy(filename, argv[1]);
     encryption_key = atol(argv[2]);
 
-    if (id == 0) {
-        start_time = MPI_Wtime(); // Registro del tiempo de inicio
-    }
+    start_time = MPI_Wtime(); // Registro del tiempo de inicio
 
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -66,38 +64,36 @@ int main(int argc, char *argv[]) {
     // Encrypt the loaded text
     encrypt(encryption_key, text, text_len);
 
-    if (id == 0) {
-        // Print the encrypted text
-        printf("Encrypted text: %s\n", text);
-    }
+    // Print the encrypted text for each node
+    printf("Node %d - Encrypted text: %s\n", id, text);
 
     // Decrypt the text (use the same key)
     decrypt(encryption_key, text, text_len);
 
-    if (id == 0) {
-        // Print the decrypted text
-        printf("Decrypted text: %s\n", text);
+    // Print the decrypted text for each node
+    printf("Node %d - Decrypted text: %s\n", id, text);
 
-        // Search for the keyword "es una prueba de" in the decrypted text
-        if (strstr(text, "es una prueba de") != NULL) {
-            printf("¡Frase o palabra encontrada!\n");
-        } else {
-            printf("Frase o palabra no encontrada en el texto\n");
-        }
-
-        end_time = MPI_Wtime(); // Registro del tiempo de finalización
-        printf("Tiempo de ejecución: %f segundos\n", end_time - start_time);
-
-        // Serial runtime
-        serial_runtime = end_time - start_time;
+    // Search for the keyword "es una prueba de" in the decrypted text
+    if (strstr(text, "es una prueba de") != NULL) {
+        printf("Node %d - ¡Frase o palabra encontrada!\n", id);
+    } else {
+        printf("Node %d - Frase o palabra no encontrada en el texto\n", id);
     }
 
-    // Broadcast the serial runtime to all processes
-    MPI_Bcast(&serial_runtime, 1, MPI_DOUBLE, 0, comm);
+    end_time = MPI_Wtime(); // Registro del tiempo de finalización
+    printf("Node %d - Tiempo de ejecución: %f segundos\n", id, end_time - start_time);
 
-    parallel_runtime = MPI_Wtime() - start_time;
+    // Sincronizar todos los nodos
+    MPI_Barrier(comm);
 
+    // El nodo 0 calcula el tiempo de ejecución serial y calcula el speedup
     if (id == 0) {
+        serial_runtime = end_time - start_time;
+        parallel_runtime = MPI_Wtime() - start_time;
+        
+        // Broadcast the serial runtime to all processes
+        MPI_Bcast(&serial_runtime, 1, MPI_DOUBLE, 0, comm);
+        
         // Calculate and display the speedup
         double speedup = serial_runtime / parallel_runtime;
         printf("Speedup: %f\n", speedup);
