@@ -1,4 +1,5 @@
 Comandos para compilar el programa:
+gcc -o bruteforce00s bruteforce00s.c -I/path/to/openssl/include -lcrypto
 mpicc -o bruteforce bruteforce.c -I/path/to/openssl/include -lcrypto
 mpicc -o bruteforce00 bruteforce00.c -I/path/to/openssl/include -lcrypto
 mpicc -o bruteforce00 bruteforce00B.c -I/path/to/openssl/include -lcrypto
@@ -7,6 +8,7 @@ mpicc -o bruteforce00B3 bruteforce00B3.c -I/path/to/openssl/include -lcrypto
 mpicc -o pruebabruteforce pruebabruteforce.c -I/path/to/openssl/include -lcrypto
 
 Comandos para correr el programa:
+./bruteforce00s
 mpirun -np 4 ./bruteforce
 mpirun -np 4 ./bruteforce00 texto.txt 123456L
 mpirun -np 4 ./bruteforce00B texto.txt 123456L
